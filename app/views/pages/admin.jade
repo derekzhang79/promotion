@@ -1,0 +1,55 @@
+extends ../layout
+
+block content
+	.container.contentTop
+		.row
+			form.form-horizontal(method="post", action="/admin/media", enctype="multipart/form-data")
+
+				if media._id
+					input(type="hidden", name="_id", value=media._id)
+				.form-group
+					label.col-sm-2.control-label(for="inputCategory") 介质分类
+					.col-sm-10
+						input#inputCategory.form-control(type="text", name="categoryName", value=media.categoryName)
+				.form-group
+					label.col-sm-2.control-label 分类选择
+					each category in categories
+						label.radio-inline
+							if media._id
+								input(type="radio", name="category", value="#{category._id}", 
+									checked=category._id.toString()==media.category.toString())
+								span #{category.name}
+							else
+								input(type="radio", name="category", value="#{category._id}")
+								span #{category.name}
+				.form-group
+					label.col-sm-2.control-label(for="inputTitle") 名字
+					.col-sm-10
+						input#inputTitle.form-control(type="text", name="name", value=media.name)
+				.form-group
+					label.col-sm-2.control-label(for="inputSummary") 简介
+					.col-sm-10
+						input#inputSummary.form-control(type="text", name="summary", value=media.summary)
+
+				.form-group
+					label.col-sm-2.control-label(for="uploadContent") 上传介质
+					.col-sm-10
+						input#uploadContent(type="file", name="uploadContent")
+				.form-group
+					label.col-sm-2.control-label(for="uploadThumbnail") 上传缩略图
+					.col-sm-10
+						input#uploadThumbnail(type="file", name="uploadThumbnail")
+
+				.form-group
+					label.col-sm-2.control-label(for="inputFlash") 在线地址
+					.col-sm-10
+						input#inputFlash.form-control(type="text", name="showUrl", value=media.showUrl)
+				.form-group
+					label.col-sm-2.control-label(for="inputYear") 上线时间
+					.col-sm-2
+						input#inputYear.form-control(type="date", name="publishTime", value=media.publishTime)
+
+				.form-group
+					.col-sm-offset-2.col-sm-10
+						button.btn.btn-primary(type="submit") 录入
+	script(src="/js/admin.js")

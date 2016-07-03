@@ -1,0 +1,20 @@
+extends ../layout
+
+block content
+	.container.contentTop
+		.row
+			each category in categories
+				.panel.panel-default
+					.panel-heading 
+						h4 
+							a(href='/results?cat=#{category._id}&p=0') #{category.name}
+					.panel-body
+						if category.medias && category.medias.length > 0
+							each item in category.medias
+								.col-md-2.text-center
+									.thumbnail
+										a(href="/media/#{item._id}")
+											img(src="/upload/#{item.thumbnail}", alt="#{item.name}", width="150px", height="170px")
+										.caption
+											h4 #{item.name}
+											p: a.btn.btn-primary(href="#{item.showUrl}", role="button" target="_blank") 查看在线

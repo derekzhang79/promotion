@@ -1,0 +1,33 @@
+extends ../layout
+
+block content
+	.container.contentTop
+		.row
+			table.table.table-hover.table-bordered
+				thead
+					tr
+						th 名字
+						th 简介
+						th 内容
+						th 缩略图
+						th 在线地址
+						th 上线时间
+						th pv
+						th 查看
+						th 更新
+						th 删除
+					tbody
+						each item in medias
+							tr(class="item-id-#{item._id}")
+								td #{item.name}
+								td #{item.summary}
+								td #{item.content}
+								td #{item.thumbnail}
+								td #{item.showUrl}
+								td #{moment(item.publishTime).format('MM/DD/YYYY')}
+								td #{item.pv}
+								td: a(target="_blank", href="/media/#{item._id}") 查看
+								td: a(target="_blank", href="../media/update/#{item._id}") 修改
+								td 
+									button.btn.btn-danger.del(type="button", data-id="#{item._id}") 删除
+	script(src="/js/admin.js")

@@ -1,0 +1,62 @@
+extends ../layout
+
+block content
+	.container.contentTop
+		.row
+			.col-md-7
+				img(src="/upload/#{media.thumbnail}" width="500")
+				.panel.panel-default.panelTop
+					.panel-heading
+						h4 评论区
+					.panel-body
+						ul.media-list
+							each item in comments
+								li.media
+									if item.from
+										a.headPhoto.media-left(href="#comments", data-cid="#{item._id}", data-tid="#{item.from._id}")
+											img.img-circle(src="http://club.suning.com/uc_server/images/noavatar_small.gif", 
+												style="width: 64px; height: 64px;", alt="...")
+									else 
+										a.headPhoto.media-left(href="#comments", data-cid="#{item._id}")
+											img.img-circle(src="http://club.suning.com/uc_server/images/noavatar_small.gif", 
+												style="width: 64px; height: 64px;", alt="...")
+									.media-body
+										if item.from
+											h4.media-heading #{item.from.name}
+										p #{item.content}
+										if item.reply && item.reply.length > 0
+											each reply in item.reply
+												.media 
+													a.headPhoto.media-left(href="#comments",data-cid="#{item._id}", data-tid="#{reply.from._id}")
+														img.img-circle(src="http://club.suning.com/uc_server/images/noavatar_small.gif", 
+															style="width: 64px; height: 64px;", alt="...")
+													.media-body
+														h5.media-heading #{reply.from.name} &nbsp;回复&nbsp;#{reply.to.name} :
+														p #{reply.content}
+								hr
+						#comments
+							form#commentForm(method="POST", action="/user/comment")
+								input(type="hidden", name="comment[media]", value="#{media._id}")
+								if user
+									input(type="hidden", name="comment[from]", value="#{user._id}")
+								.form-group
+									textarea#textareaId.form-control(name="comment[content]", rows="4")
+								.pull-right
+									if user
+										button.btn.btn-primary(type="submit") 提交
+									else 
+										a.navbar-link(class="btn btn-primary",href="#", data-toggle="modal", data-target="#loginModal") 登录后评论
+			.col-md-5
+				dl.dl-horizontal
+					dt 名字
+					dd #{media.name}
+					dt 简介
+					dd #{media.summary}
+					dt 内容
+					dd #{media.content}
+					dt 在线地址
+					dd #{media.showUrl}
+					dt 上线时间
+					dd #{media.publishTime}
+
+	script(src="/js/detail.js")
