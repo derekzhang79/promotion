@@ -31,7 +31,7 @@ exports.search = function (req, res) {
       .find({_id: catId})
       .populate({
         path: 'medias', 
-        select: 'title poster',
+        select: 'name thumbnail showUrl',
       })
       .exec(function (err, categories) {
         if (err) {
@@ -54,7 +54,7 @@ exports.search = function (req, res) {
     })
   } else {
     Media
-      .find({title: new RegExp(search + '*', 'i')})
+      .find({name: new RegExp(search + '*', 'i')})
       .exec(function (err, medias) {
         if (err) {
           console.log(err)
