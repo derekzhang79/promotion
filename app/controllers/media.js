@@ -150,7 +150,7 @@ exports.list = function(req, res) {
 	})
 }
 
-//list delete media
+// delete media
 exports.delete = function (req, res){
 	var id = req.query.id
 	console.log(id)
