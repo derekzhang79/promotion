@@ -5,11 +5,16 @@
 		.collapse.navbar-collapse
 			ul.nav.navbar-nav
 				li
-					a(href='/results?cat=54d368f4dacdcf5831fe40d3&p=0') 活动代码包
-				li
-					a(href='/results?cat=54d3690edacdcf5831fe40d4&p=0') 视觉展示
-				li
-					a(href='/results?cat=54d36919dacdcf5831fe40d5&p=0') 视觉源文件
+					a(href='/') 首页				
+				if user && user.role > 10
+					li
+						a(href='/admin/category/new') 分类创建		
+					li
+						a(href='/admin/category/list') 分类列表						
+					li
+						a(href='/admin/media/new') 介质创建		
+					li
+						a(href='/admin/media/list') 介质列表																							 	
 			form.navbar-form.navbar-left(method='get', action='/results')
 				.form-group
 					input.form-control(type="text", name='search')
@@ -58,9 +63,4 @@
 				.modal-footer
 					button.btn.btn-default(type="button" data-dismiss="modal") 关闭
 					button.btn.btn-success(type="submit") 提交
-//- .container
-//- 	.row
-//- 		.page-header
-//- 			h1= title
-			//- middle 文艺爱情片
 
