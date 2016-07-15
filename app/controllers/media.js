@@ -7,6 +7,7 @@ var path = require('path')
 var formidable = require('formidable');
 var util = require('util');
 var _ = require('underscore');
+var unzip = require('unzip'); 
 	// detail page
 exports.detail = function (req, res) {
 	var id = req.params.id
@@ -54,7 +55,7 @@ exports.update = function (req, res) {
 			}
 			Category.find({}, function (err, categories) {
 				res.render('admin', {
-					title: 'Imovie 后台更新页面',
+					title: '后台更新页面',
 					media: media,
 					categories: categories
 				})
@@ -172,7 +173,7 @@ exports.saveFile = function (req, res, next) {
       form.encoding = 'utf-8';    //设置编辑
       form.uploadDir = 'public/temp';   //设置上传目录
       form.keepExtensions = true;  //保留后缀
-      form.maxFieldsSize = 2 * 1024 * 1024;   //文件大小
+      form.maxFieldsSize = 10 * 1024 * 1024;   //文件大小
  
     form.parse(req, function(err, fields, files) {
     	if (err) {
@@ -183,46 +184,81 @@ exports.saveFile = function (req, res, next) {
     	req.body = { media: fields };
     	var contentObj = files.uploadContent;
     	var thumbnailObj = files.uploadThumbnail;
+    	var conName = contentObj.name;
+    	var conOName = conName.substring(0, conName.lastIndexOf('.'));
+    	var thumName = thumbnailObj.name;
+    	var thumOName = thumName.substring(0, thumName.lastIndexOf('.'));
+    	var conOk = false;
+    	var thumOk = false;
+		var goNext = function(){
+			if (conOk && thumOk) {
+				next();
+			}			
+		};
 
+    	if (conName) {
 
-		fs.readFile(contentObj.path, function (err, data) {
-	    	if (err) {
-	    		console.log(err);
-	    		next();
-	    	}			
-			var timestamp = Date.now()
-			var type = contentObj.type.split('/')[1]
-			var poster = timestamp + '.' + type	
-			var newPath = path.join(__dirname, '../../', 'public/upload/' + poster);
-			fs.writeFile(newPath, data, function (err) {
+			fs.readFile(contentObj.path, function (err, data) {
 		    	if (err) {
 		    		console.log(err);
-		    	}
-				req.body.media.content = poster;
-
-				console.log('req.body.media.content'+ req.body.media.content);
-
-				fs.readFile(thumbnailObj.path, function(err, data){
+		    		conOk = true;
+		    	}			
+				var timestamp = Date.now()
+				var type = conName.substring(conName.lastIndexOf('.'));
+				var poster = timestamp + type	
+				var newPath = path.join(__dirname, '../../', 'public/upload/' + poster);
+				fs.writeFile(newPath, data, function (err) {
 			    	if (err) {
 			    		console.log(err);
-			    	}					
-					var timestamp = Date.now()
-					var type = thumbnailObj.type.split('/')[1]
-					var poster = timestamp + '.' + type	
-					var newPath = path.join(__dirname, '../../', 'public/upload/' + poster)	
-					fs.writeFile(newPath, data, function(err){
-				    	if (err) {
-				    		console.log(err);
-				    	}
-				    	req.body.media.thumbnail = poster;
+			    		conOk = true;
+			    	}
+					req.body.media.content = poster;
 
-				    	console.log('req.body.media.thumbnail'+ req.body.media.thumbnail);
+					// 解压zip包
+					fs.createReadStream(newPath).pipe(unzip.Extract({ path: 'public/output/'+timestamp }));
+					var previewUri = '/output/'+ timestamp +'/'+ conOName + '/index.html';
 
-				    	next();	
-					})				
+					// console.log('previewUri: '+previewUri);
+					req.body.media.previewUri = previewUri;
+					conOk = true;
+					goNext();
+
 				})
-			})
-		}) 
+			}) 
+
+    	}else{
+    		conOk = true;
+    	}
+
+		if(thumName){
+			fs.readFile(thumbnailObj.path, function(err, data){
+		    	if (err) {
+		    		console.log(err);
+		    		thumOk = true;
+		    	}					
+				var timestamp = Date.now()
+				var type = thumName.substring(thumName.lastIndexOf('.'));
+				var poster = timestamp + '.' + type	
+				var newPath = path.join(__dirname, '../../', 'public/upload/' + poster)	
+				fs.writeFile(newPath, data, function(err){
+			    	if (err) {
+			    		console.log(err);
+			    	}
+			    	req.body.media.thumbnail = poster;
+
+			    	// console.log('req.body.media.thumbnail'+ req.body.media.thumbnail);
+
+			    	thumOk = true;
+			    	goNext();
+				})				
+			})					
+		}else{
+			thumOk = true;
+		}
+
+		goNext();
+
+
 
     });
 

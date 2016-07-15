@@ -11,7 +11,24 @@ exports.new = function (req, res) {
   })
 }
 
+//admin showUpdate category
+exports.showUpdate = function (req, res) {
+  var id = req.params.id;
+  if (!id) {
+    return handleError(new Error('no category id'));
+  }
+  Category.findById(id, function(err, category){
+    if (err) {
+      return handleError(err);
+    }
+    res.render('updateCategory', {
+      title : '后台录入页',
+      category: category
+    })    
 
+  })
+
+}
 
 // admin post category
 exports.save = function (req, res){
@@ -27,6 +44,26 @@ exports.save = function (req, res){
       })
     } 
   })
+}
+
+exports.update = function (req, res){
+  var id = req.params.id;
+  if (!id) {
+    return handleError(new Error('no category id'));
+  }
+  Category.findById(id, function(err, category){
+    if (err) {
+      return handleError(err);
+    }
+    category.name = req.body.categoryName;
+    category.save(function(err, category){
+      if (err) {
+        console.log(err)
+      }
+      res.redirect('/admin/category/list')      
+    }) 
+
+  })    
 }
 
 //category list page 

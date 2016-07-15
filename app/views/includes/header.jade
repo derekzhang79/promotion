@@ -14,10 +14,13 @@
 					li
 						a(href='/admin/media/new') 介质创建		
 					li
-						a(href='/admin/media/list') 介质列表																							 	
+						a(href='/admin/media/list') 介质列表		
+					if user.role == 110
+						li
+							a(href='/admin/user/list') 用户管理																													 	
 			form.navbar-form.navbar-left(method='get', action='/results')
 				.form-group
-					input.form-control(type="text", name='search')
+					input.form-control(type="text", name='search' placeholder="名称关键字" value="#{keyword ? keyword : ''}")
 				button.btn.btn-default(type='submit') 搜索
 			if user
 				p.navbar-text.navbar-right
@@ -43,7 +46,7 @@
 						input#signupName.form-control(name="user[name]", type="text")
 					.form-group
 						label(for="signupPassword") 密码
-						input#signupPassword.form-control(name="user[password]", type="text")
+						input#signupPassword.form-control(name="user[password]", type="password")
 				.modal-footer
 					button.btn.btn-default(type="button" data-dismiss="modal") 关闭
 					button.btn.btn-success(type="submit") 提交
@@ -59,7 +62,7 @@
 						input#loginName.form-control(name="user[name]", type="text")
 					.form-group
 						label(for="loginPassword") 密码
-						input#loginPassword.form-control(name="user[password]", type="text")
+						input#loginPassword.form-control(name="user[password]", type="password")
 				.modal-footer
 					button.btn.btn-default(type="button" data-dismiss="modal") 关闭
 					button.btn.btn-success(type="submit") 提交

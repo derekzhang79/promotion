@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+	.container.contentTop
+		.row
+			form.form-horizontal(method="post" action="/admin/user/update" )
+				input(type="hidden", name="userId", value="#{user._id}")
+				.form-group
+					label.col-sm-2.control-label(for="inputName") 用户名
+					.col-sm-10
+						input#inputName.form-control(type="text", name="userName",value="#{user.name}")
+				.form-group
+					label.col-sm-2.control-label(for="inputRole") 角色
+					.col-sm-10
+						input#inputRole.form-control(type="text", name="userRole",value="#{user.role}")						
+				.form-group
+					.col-sm-offset-2.col-sm-10
+						button.btn.btn-primary(type="submit") 录入 

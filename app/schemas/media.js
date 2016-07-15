@@ -9,7 +9,11 @@ var MediaSchema = new Schema({
 	tags: [],
 	summary:  String,
 	content: String,
-	thumbnail: String,
+	thumbnail: {
+		type: String,
+		default: 'default.png'
+	},
+	previewUri: String,
 	showUrl: String,	
 	publishTime: {
 		type: Date

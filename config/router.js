@@ -31,7 +31,7 @@ module.exports = function (app) {
   // admin post media
   app.post('/admin/media', User.loginRequired, User.adminRequired, Media.saveFile, Media.save)
   //list delete media
-  app.delete('/admin/media/list', User.loginRequired, User.adminRequired, Media.delete)
+  app.delete('/admin/media', User.loginRequired, User.adminRequired, Media.delete)
 
   /*用户*/
   //post regist page
@@ -45,7 +45,10 @@ module.exports = function (app) {
   //logout page 
   app.get('/logout', User.logout)
   //userlist page 
-  app.get('/admin/user/list', User.loginRequired, User.adminRequired,User.list)
+  app.get('/admin/user/list', User.loginRequired, User.adminRequired, User.list)
+  app.get('/admin/user/:id', User.loginRequired, User.adminRequired, User.showUpdate)
+  app.post('/admin/user/update', User.loginRequired, User.adminRequired, User.update)
+  app.delete('/admin/user', User.loginRequired, User.adminRequired, User.delete)
 
   /*评论*/
   app.post('/user/comment', User.loginRequired, Comment.save)
@@ -55,6 +58,7 @@ module.exports = function (app) {
   app.post('/admin/category', User.loginRequired, User.adminRequired, Category.save)
   app.get('/admin/category/list', User.loginRequired, User.adminRequired, Category.list)
   app.get('/admin/category/medias', User.loginRequired, User.adminRequired, Category.list)
-  app.get('/admin/category/update', User.loginRequired, User.adminRequired, Category.new)
-  app.delete('/admin/category/list', User.loginRequired, User.adminRequired, Category.delete)
+  app.get('/admin/category/showUpdate/:id', User.loginRequired, User.adminRequired, Category.showUpdate)
+  app.post('/admin/updateCategory/:id', User.loginRequired, User.adminRequired, Category.update)
+  app.delete('/admin/category', User.loginRequired, User.adminRequired, Category.delete)
 }

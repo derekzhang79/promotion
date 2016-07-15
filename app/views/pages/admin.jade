@@ -47,7 +47,7 @@ block content
 				.form-group
 					label.col-sm-2.control-label(for="inputYear") 上线时间
 					.col-sm-2
-						input#inputYear.form-control(type="date", name="publishTime", value=media.publishTime)
+						input#inputYear.form-control(type="date", name="publishTime", value="#{moment(media.publishTime).format('YYYY-MM-DD')}")
 
 				.form-group
 					.col-sm-offset-2.col-sm-10

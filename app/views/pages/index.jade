@@ -17,4 +17,7 @@ block content
 											img(src="/upload/#{item.thumbnail}", alt="#{item.name}", width="150px", height="170px")
 										.caption
 											h4 #{item.name}
-											p: a.btn.btn-primary(href="#{item.showUrl}", role="button" target="_blank") 查看在线
+											if item.showUrl
+												p: a.btn.btn-primary(href="#{item.showUrl}", role="button" target="_blank") 查看在线
+											else
+												p: a.btn.btn-primary(disabled) 查看在线

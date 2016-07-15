@@ -52,13 +52,17 @@ block content
 					dd #{media.name}
 					dt 简介
 					dd #{media.summary}
-					dt 内容
+					dt 内容下载
 					dd 
 						a(href="/upload/#{media.content}")= media.content
-					dt 在线地址
+					dt 预览地址
 					dd 
-						a(href="#{media.showUrl}" target="_blank")= media.showUrl
+						a(href="#{media.previewUri}", target="_blank") #{media.previewUri}						
+					dt 产品地址
+					dd 
+						a(href="#{media.showUrl}", target="_blank")= media.showUrl
 					dt 上线时间
-					dd #{moment(media.publishTime).format('MM/DD/YYYY')}
+					if media.publishTime
+						dd #{moment(media.publishTime).format('YYYY/MM/DD')}				
 
 	script(src="/js/detail.js")

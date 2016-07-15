@@ -27,6 +27,7 @@ exports.regist = function (req, res) {
         if (err) {
           console.log(err)
         }
+        req.session.user = user
         res.redirect('/')
       })
     }
@@ -82,6 +83,54 @@ exports.list = function(req, res) {
       users: users
     })  
   })
+}
+
+exports.showUpdate = function(req, res){
+  var id = req.params.id;
+  if (!id) {
+    console.log('no id');
+  }
+
+  User.findById(id, function(err, user){
+    if (err) {
+      console.log('user not find');
+      res.redirect('/admin/user/list');
+    }
+    res.render('updateUser', {user: user})
+  })
+}
+
+exports.update = function(req, res){
+  var userId = req.body.userId;
+  if (userId) {
+    User.findById(userId, function(err, returnUser){
+      returnUser.name = req.body.userName;
+      returnUser.role = req.body.userRole;
+      returnUser.save(function(err, user){
+        if (err) return handleError(err);
+        res.redirect('/admin/user/list');
+      });
+      
+    })
+  }else{
+    return handleError(new Error('no user id'));
+    // res.redirect('/admin/user/list');
+  }
+}
+
+// delete user
+exports.delete = function (req, res){
+  var id = req.query.id
+  console.log(id)
+  if (id) {
+    User.remove({_id: id}, function (err, user) {
+      if (err) {
+        console.log(err)
+      } else {
+        res.json({success:1})
+      }
+    })
+  }
 }
 
 exports.loginRequired = function (req, res, next) {
